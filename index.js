@@ -3,42 +3,42 @@
 const fs = require('fs');
 const minimist = require('minimist');
 const path = require('path');
+const prettier = require('prettier');
 
-const defaultConfig = {
-  arrowParens: 'avoid',
-  bracketSpacing: true,
-  endOfLine: 'auto',
-  filepath: '',
-  htmlWhitespaceSensitivity: 'css',
-  insertPragma: false,
-  jsxBracketSameLine: false,
-  jsxSingleQuote: false,
-  parser: '',
-  printWidth: 80,
-  proseWrap: 'preserve',
-  quoteProps: 'as-needed',
-  requirePragma: false,
-  semi: true,
-  singleQuote: false,
-  tabWidth: 2,
-  trailingComma: 'none',
-  useTabs: false,
-  vueIndentScriptAndStyle: false,
+const defaultConfigFor = function(format) {
+  let config = prettier.getSupportInfo().options;
+
+  if (!['js', 'yaml'].includes(format)) {
+    config = config.filter(
+      option => ![null, Infinity].includes(option.default)
+    );
+  }
+
+  if (format != 'js') {
+    config = config.filter(option => option.default !== undefined);
+  }
+
+  return Object.fromEntries(
+    config.map(option => [option.name, option.default])
+  );
 };
 
 const formats = {
   json: {
     filename: '.prettierrc',
     generate: function() {
-      return JSON.stringify(defaultConfig, null, 2);
+      return JSON.stringify(defaultConfigFor('json'), null, 2);
     },
   },
   yaml: {
     filename: '.prettierrc.yaml',
     generate: function() {
-      return Object.entries(defaultConfig)
+      return Object.entries(defaultConfigFor('yaml'))
         .map(([key, value]) => {
           if (typeof value === 'string' && value === '') return `${key}: ''`;
+          if (value === null) return `${key}: ~`;
+          if (value === Infinity) return `${key}: .inf`;
+          if (!!value.forEach && value.length === 0) return `${key}: []`;
           return `${key}: ${value}`;
         })
         .join('\n');
@@ -47,9 +47,10 @@ const formats = {
   toml: {
     filename: '.prettierrc.toml',
     generate: function() {
-      return Object.entries(defaultConfig)
+      return Object.entries(defaultConfigFor('toml'))
         .map(([key, value]) => {
           if (typeof value === 'string') return `${key} = "${value}"`;
+          if (!!value.forEach && value.length === 0) return `${key} = []`;
           return `${key} = ${value}`;
         })
         .join('\n');
@@ -58,9 +59,12 @@ const formats = {
   js: {
     filename: '.prettierrc.js',
     generate: function() {
-      const contents = Object.entries(defaultConfig)
+      const contents = Object.entries(defaultConfigFor('js'))
         .map(([key, value]) => {
           if (typeof value === 'string') return `  ${key}: '${value}',`;
+          if (typeof value === 'undefined') return `  ${key}: undefined,`;
+          if (value === null) return `  ${key}: null,`;
+          if (!!value.forEach && value.length === 0) return `${key}: [],`;
           return `  ${key}: ${value},`;
         })
         .join('\n');
@@ -78,7 +82,7 @@ const formats = {
         process.exit(0);
       }
       const data = JSON.parse(fs.readFileSync(file));
-      data.prettier = defaultConfig;
+      data.prettier = defaultConfigFor('json');
       return JSON.stringify(data, null, 2);
     },
   },
@@ -137,7 +141,7 @@ function run() {
 }
 
 module.exports = {
-  defaultConfig,
+  defaultConfigFor,
   formats,
 };
 
