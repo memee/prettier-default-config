@@ -1,0 +1,25 @@
+{
+  "name": "prettier-default-config",
+  "version": "0.1.0",
+  "description": "Generate a prettier config file with all the possible options and their default values",
+  "bin": "index.js",
+  "scripts": {
+    "format": "prettier --write ./*.js",
+    "test": "tape test.js | faucet"
+  },
+  "author": "Dylan Baker <dylan@simulacrum.party>",
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "minimist": "^1.2.0"
+  },
+  "devDependencies": {
+    "faucet": "0.0.1",
+    "prettier": "^1.19.1",
+    "tape": "^4.13.0",
+    "toml": "^3.0.0",
+    "yaml": "^1.7.2"
+  }
+}
