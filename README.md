@@ -28,10 +28,10 @@ OPTIONS:
 ## Exclusions
 
 The config file formats that Prettier uses are not able to represent all of
-Prettier's default values. For instance, JSON can't represent `undefined` or
-`Infinity`, and no format except actual JavaScript can represent `undefined`.
-As a result, depending on the chosen format, some configuration options may be
-excluded. The current list of exclusions is as follows:
+Prettier's default values. For instance, JSON can't represent `Infinity`, and
+no format except actual JavaScript can represent `undefined`. As a result,
+depending on the chosen format, some configuration options may be excluded. The
+current list of exclusions is as follows:
 
 
 | Format | Excluded Options                  |
