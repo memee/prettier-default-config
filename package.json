@@ -1,6 +1,6 @@
 {
   "name": "prettier-default-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generate a prettier config file with all the possible options and their default values",
   "bin": "index.js",
   "scripts": {
