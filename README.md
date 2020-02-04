@@ -39,7 +39,7 @@ follows:
 |--------|-----------------------------------|
 | JSON   | `rangeEnd` , `filepath`, `parser` |
 | TOML   | `rangeEnd`, `filepath`, `parser`  |
-| YAML   | `rangeEnd`                        |
+| YAML   | `filepath`, `parser`  |
 
 ## License
 
