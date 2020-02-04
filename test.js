@@ -1,6 +1,6 @@
 const fs = require('fs');
 const test = require('tape');
-const TOML = require('toml');
+const TOML = require('@iarna/toml');
 const YAML = require('yaml');
 
 const { defaultConfigFor, formats } = require('.');
@@ -43,20 +43,28 @@ test('YAML supports infinity, leave rangeEnd in', t => {
   t.equal(YAML.parse(result).rangeEnd, Infinity);
 });
 
-test("YAML doesn't support undefined so leave out filepath and parser", t => {
+test('TOML supports infinity, leave rangeEnd in', t => {
   t.plan(2);
-  const result = formats.yaml.generate();
+  const result = TOML.parse(formats.toml.generate());
+  t.true(Object.keys(result).includes('rangeEnd'));
+  t.equal(result.rangeEnd, Infinity);
+});
+
+test("JSON doesn't support undefined, leave out filepath and parser", t => {
+  t.plan(2);
+  const result = JSON.parse(formats.json.generate());
   t.false(Object.keys(result).includes('parser'));
   t.false(Object.keys(result).includes('filepath'));
 });
 
-test("TOML doesn't support infinity, so leave out rangeEnd", t => {
-  t.plan(1);
-  const result = formats.toml.generate();
-  t.false(Object.keys(result).includes('rangeEnd'));
+test("YAML doesn't support undefined, leave out filepath and parser", t => {
+  t.plan(2);
+  const result = YAML.parse(formats.yaml.generate());
+  t.false(Object.keys(result).includes('parser'));
+  t.false(Object.keys(result).includes('filepath'));
 });
 
-test('JS supports undefined, so leave in parser and filepath', t => {
+test('JS supports undefined, leave in parser and filepath', t => {
   t.plan(4);
   const result = eval(formats.js.generate());
   t.equal(result.parser, undefined);

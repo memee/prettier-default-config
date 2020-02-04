@@ -28,18 +28,17 @@ OPTIONS:
 ## Exclusions
 
 The config file formats that Prettier uses are not able to represent all of
-Prettier's default values. For instance, TOML has no concept of `null`, neither
-TOML nor JSON can represent `Infinity`, and no format except actual JavaScript
-can represent `undefined`. As a result, depending on the chosen format, some
-configuration options may be excluded. The current list of exclusions is as
-follows:
+Prettier's default values. For instance, JSON can't represent `undefined` or
+`Infinity`, and no format except actual JavaScript can represent `undefined`.
+As a result, depending on the chosen format, some configuration options may be
+excluded. The current list of exclusions is as follows:
 
 
 | Format | Excluded Options                  |
 |--------|-----------------------------------|
 | JSON   | `rangeEnd` , `filepath`, `parser` |
-| TOML   | `rangeEnd`, `filepath`, `parser`  |
-| YAML   | `filepath`, `parser`  |
+| TOML   | `rangeEnd`                        |
+| YAML   | `filepath`                        |
 
 ## License
 

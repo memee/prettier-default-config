@@ -17,13 +17,13 @@
     "index.js"
   ],
   "dependencies": {
+    "@iarna/toml": "^2.2.3",
     "minimist": "^1.2.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "yaml": "^1.7.2"
   },
   "devDependencies": {
     "faucet": "0.0.1",
-    "tape": "^4.13.0",
-    "toml": "^3.0.0",
-    "yaml": "^1.7.2"
+    "tape": "^4.13.0"
   }
 }

@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const minimist = require('minimist');
 const path = require('path');
+const { inspect } = require('util');
+
+const minimist = require('minimist');
 const prettier = require('prettier');
+const TOML = require('@iarna/toml');
+const YAML = require('yaml');
 
 const defaultConfigFor = function(format) {
   let config = prettier.getSupportInfo().options;
 
-  if (!['js', 'yaml'].includes(format)) {
-    config = config.filter(
-      option => ![null, Infinity].includes(option.default)
-    );
+  if (format.match(/json/)) {
+    config = config.filter(option => option.default !== Infinity);
   }
 
   if (format != 'js') {
@@ -33,42 +35,19 @@ const formats = {
   yaml: {
     filename: '.prettierrc.yaml',
     generate: function() {
-      return Object.entries(defaultConfigFor('yaml'))
-        .map(([key, value]) => {
-          if (typeof value === 'string' && value === '') return `${key}: ''`;
-          if (value === null) return `${key}: ~`;
-          if (value === Infinity) return `${key}: .inf`;
-          if (!!value.forEach && value.length === 0) return `${key}: []`;
-          return `${key}: ${value}`;
-        })
-        .join('\n');
+      return YAML.stringify(defaultConfigFor('yaml'));
     },
   },
   toml: {
     filename: '.prettierrc.toml',
     generate: function() {
-      return Object.entries(defaultConfigFor('toml'))
-        .map(([key, value]) => {
-          if (typeof value === 'string') return `${key} = "${value}"`;
-          if (!!value.forEach && value.length === 0) return `${key} = []`;
-          return `${key} = ${value}`;
-        })
-        .join('\n');
+      return TOML.stringify(defaultConfigFor('toml'));
     },
   },
   js: {
     filename: '.prettierrc.js',
     generate: function() {
-      const contents = Object.entries(defaultConfigFor('js'))
-        .map(([key, value]) => {
-          if (typeof value === 'string') return `  ${key}: '${value}',`;
-          if (typeof value === 'undefined') return `  ${key}: undefined,`;
-          if (value === null) return `  ${key}: null,`;
-          if (!!value.forEach && value.length === 0) return `${key}: [],`;
-          return `  ${key}: ${value},`;
-        })
-        .join('\n');
-      return `module.exports = {\n${contents}\n};`;
+      return `module.exports = ${inspect(defaultConfigFor('js'))};`;
     },
   },
   'package.json': {
