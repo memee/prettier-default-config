@@ -8,6 +8,10 @@
     "test": "tape test.js | faucet"
   },
   "author": "Dylan Baker <dylan@simulacrum.party>",
+  "repository": {
+    "type": "git",
+    "url": "https://git.simulacrum.party/simulacrumparty/prettier-default-config"
+  },
   "license": "MIT",
   "files": [
     "index.js"
