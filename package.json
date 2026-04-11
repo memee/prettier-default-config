@@ -23,7 +23,7 @@
     "yaml": "^1.7.2"
   },
   "devDependencies": {
-    "faucet": "0.0.1",
+    "faucet": "0.0.4",
     "tape": "^4.13.0"
   }
 }
